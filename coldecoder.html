@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>COLTXT Viewer</title>
+<style>
+body{
+    background:black;
+    color:white;
+    font-family:monospace;
+}
+#output{
+    white-space:pre;
+    font-size:10px;
+    line-height:10px;
+}
+</style>
+</head>
+
+<body>
+
+<input type="file" id="file">
+<pre id="output"></pre>
+
+<script>
+
+document.getElementById("file").addEventListener("change", e=>{
+    const file = e.target.files[0]
+    const reader = new FileReader()
+
+    reader.onload = ()=>{
+        render(reader.result)
+    }
+
+    reader.readAsText(file)
+})
+
+function render(data){
+
+    const lines = data.split("\n")
+    const output = document.getElementById("output")
+    output.innerHTML = ""
+
+    for(let i=3;i<lines.length;i++){
+
+        const row = lines[i].trim().split(" ")
+
+        row.forEach(cell=>{
+
+            if(!cell) return
+
+            const [r,g,b,char] = cell.split(",")
+
+            const span = document.createElement("span")
+            span.textContent = char
+            span.style.color = `rgb(${r},${g},${b})`
+
+            output.appendChild(span)
+        })
+
+        output.appendChild(document.createTextNode("\n"))
+    }
+}
+
+</script>
+
+</body>
+</html>
